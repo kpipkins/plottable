@@ -326,6 +326,23 @@ var Plottable;
                 return { min: input, max: input };
             }
             Methods.toExtent = toExtent;
+            function isIntersecting(segment1, segment2) {
+                var slope1 = (segment1[1].y - segment1[0].y) / (segment1[1].x - segment1[0].x);
+                var slope2 = (segment2[1].y - segment2[0].y) / (segment2[1].x - segment2[0].x);
+                var lineConstant1 = segment1[0].y - slope1 * segment1[0].x;
+                var lineConstant2 = segment2[0].y - slope2 * segment2[0].x;
+                if (slope1 === slope2 && lineConstant1 === lineConstant2) {
+                    return true;
+                }
+                else if (slope1 === slope2) {
+                    return false;
+                }
+                else {
+                    var intersectionPointX = (lineConstant2 - lineConstant1) / (slope1 - slope2);
+                    return _Util.Methods.inRange(intersectionPointX, segment1[0].x, segment1[1].x) && _Util.Methods.inRange(intersectionPointX, segment2[0].x, segment2[1].x);
+                }
+            }
+            Methods.isIntersecting = isIntersecting;
         })(Methods = _Util.Methods || (_Util.Methods = {}));
     })(_Util = Plottable._Util || (Plottable._Util = {}));
 })(Plottable || (Plottable = {}));
@@ -2888,6 +2905,37 @@ var Plottable;
             };
             Line.prototype._getSelection = function (index) {
                 return this._getRenderArea().select(this._getSelector());
+            };
+            Line.prototype._isSelectionInBounds = function (selection, xExtent, yExtent, tolerance) {
+                var _this = this;
+                var lineSegments = d3.pairs(selection.data().map(function (datum, index) { return _this._getPixelPoint(datum, index); }));
+                lineSegments = lineSegments.filter(function (lineSegment) {
+                    return Plottable._Util.Methods.inRange(lineSegment[0].x, xExtent.min, xExtent.max);
+                });
+                lineSegments.some(function (lineSegment) {
+                    var startPoint = lineSegment[0].x <= lineSegment[1].x ? lineSegment[0] : lineSegment[1];
+                    var endPoint = lineSegment[0].x > lineSegment[1].x ? lineSegment[0] : lineSegment[1];
+                    if (Plottable._Util.Methods.inRange(startPoint.x, xExtent.min, xExtent.max) && Plottable._Util.Methods.inRange(startPoint.y, yExtent.min, yExtent.max)) {
+                        return true;
+                    }
+                    else if (Plottable._Util.Methods.inRange(endPoint.x, xExtent.min, xExtent.max) && Plottable._Util.Methods.inRange(endPoint.y, yExtent.min, yExtent.max)) {
+                        return true;
+                    }
+                    else {
+                        var topSegment = [{ x: xExtent.min, y: yExtent.min }, { x: xExtent.max, y: yExtent.min }];
+                        var leftSegment = [{ x: xExtent.min, y: yExtent.min }, { x: xExtent.min, y: yExtent.max }];
+                        var rightSegment = [{ x: xExtent.max, y: yExtent.min }, { x: xExtent.max, y: yExtent.max }];
+                        var bottomSegment = [{ x: xExtent.min, y: yExtent.max }, { x: xExtent.max, y: yExtent.max }];
+                        var extentSegments = [topSegment, leftSegment, rightSegment, bottomSegment];
+                        return extentSegments.some(function (segment) {
+                            return Plottable._Util.Methods.isIntersecting(segment, lineSegment);
+                        });
+                    }
+                });
+                return true;
+            };
+            Line.pointDistance = function (x1, y1, x2, y2) {
+                return Math.pow(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2), 0.5);
             };
             Line.LINE_CLASS = "line";
             return Line;

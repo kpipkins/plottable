@@ -329,6 +329,23 @@ export module _Util {
     export function toExtent(input: number): Extent {
       return {min: input, max: input};
     }
+
+    export function isIntersecting(segment1: Point[], segment2: Point[]) {
+      var slope1 = (segment1[1].y - segment1[0].y) / (segment1[1].x - segment1[0].x);
+      var slope2 = (segment2[1].y - segment2[0].y) / (segment2[1].x - segment2[0].x);
+      var lineConstant1 = segment1[0].y - slope1 * segment1[0].x;
+      var lineConstant2 = segment2[0].y - slope2 * segment2[0].x;
+      if (slope1 === slope2 && lineConstant1 === lineConstant2) {
+        return true;
+      } else if (slope1 === slope2) {
+        return false;
+      } else {
+        var intersectionPointX = (lineConstant2 - lineConstant1) / (slope1 - slope2);
+        return _Util.Methods.inRange(intersectionPointX, segment1[0].x, segment1[1].x) &&
+               _Util.Methods.inRange(intersectionPointX, segment2[0].x, segment2[1].x);
+      }
+
+    }
   }
 }
 }

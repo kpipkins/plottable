@@ -129,6 +129,7 @@ declare module Plottable {
             function lightenColor(color: string, factor: number): string;
             function darkenColor(color: string, factor: number, darkenAmount: number): string;
             function toExtent(input: number): Extent;
+            function isIntersecting(segment1: Point[], segment2: Point[]): boolean;
         }
     }
 }
@@ -1502,6 +1503,7 @@ declare module Plottable {
             _getSelector(): string;
             _getPixelPoint(datum: any, index: number): Point;
             _getSelection(index: number): D3.Selection;
+            _isSelectionInBounds(selection: D3.Selection, xExtent: Extent, yExtent: Extent, tolerance: number): boolean;
         }
     }
 }

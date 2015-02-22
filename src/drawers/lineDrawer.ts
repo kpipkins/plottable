@@ -72,6 +72,38 @@ export module _Drawer {
     public _getSelection(index: number): D3.Selection {
       return this._getRenderArea().select(this._getSelector());
     }
+
+    public _isSelectionInBounds(selection: D3.Selection, xExtent: Extent, yExtent: Extent, tolerance: number): boolean {
+      var lineSegments = d3.pairs(selection.data().map((datum, index) => this._getPixelPoint(datum, index)));
+      lineSegments = lineSegments.filter((lineSegment: Point[]) => {
+        return _Util.Methods.inRange(lineSegment[0].x, xExtent.min, xExtent.max);
+      });
+      lineSegments.some((lineSegment: Point[]) => {
+        var startPoint = lineSegment[0].x <= lineSegment[1].x ? lineSegment[0] : lineSegment[1];
+        var endPoint = lineSegment[0].x > lineSegment[1].x ? lineSegment[0] : lineSegment[1];
+        if (_Util.Methods.inRange(startPoint.x, xExtent.min, xExtent.max) &&
+            _Util.Methods.inRange(startPoint.y, yExtent.min, yExtent.max)) {
+          return true;
+        } else if (_Util.Methods.inRange(endPoint.x, xExtent.min, xExtent.max) &&
+                   _Util.Methods.inRange(endPoint.y, yExtent.min, yExtent.max)) {
+          return true;
+        } else {
+          var topSegment = [{x: xExtent.min, y: yExtent.min}, {x: xExtent.max, y: yExtent.min}];
+          var leftSegment = [{x: xExtent.min, y: yExtent.min}, {x: xExtent.min, y: yExtent.max}];
+          var rightSegment = [{x: xExtent.max, y: yExtent.min}, {x: xExtent.max, y: yExtent.max}];
+          var bottomSegment = [{x: xExtent.min, y: yExtent.max}, {x: xExtent.max, y: yExtent.max}];
+          var extentSegments = [topSegment, leftSegment, rightSegment, bottomSegment];
+          return extentSegments.some((segment: Point[]) => {
+            return _Util.Methods.isIntersecting(segment, lineSegment);
+          });
+        }
+      });
+      return true;
+    }
+
+    private static pointDistance(x1: number, y1: number, x2: number, y2: number) {
+      return Math.pow(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2), 0.5);
+    }
   }
 }
 }
