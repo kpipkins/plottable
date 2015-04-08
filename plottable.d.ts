@@ -4161,3 +4161,25 @@ declare module Plottable {
         }
     }
 }
+
+
+declare module Plottable {
+    module Interaction {
+        class Scroll extends Interaction.AbstractInteraction {
+            _anchor(component: Component.AbstractComponent, hitBox: D3.Selection): void;
+            /**
+             * Gets the callback called when a scroll occurs
+             *
+             * @return {(p: Point, deltaAmount: number) => any} The current callback.
+             */
+            onScroll(): (p: Point, deltaAmount: number) => any;
+            /**
+             * Sets the callback called when a scroll occurs
+             *
+             * @param {(p: Point, deltaAmount: number) => any} callback The callback to set.
+             * @return {Interaction.Scroll} The calling Interaction.Scroll.
+             */
+            onScroll(callback: (p: Point, deltaAmount: number) => any): Interaction.Scroll;
+        }
+    }
+}
