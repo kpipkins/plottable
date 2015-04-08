@@ -1016,7 +1016,7 @@ var Plottable;
             if (centerInDomainSpace === void 0) { centerInDomainSpace = false; }
             var centerNumber = centerInDomainSpace ? scale.scale(centerValue) : centerValue;
             var magnifyTransform = function (rangeValue) { return scale.invert(centerNumber - (centerNumber - rangeValue) * magnifyAmount); };
-            scale.domain(scale.range().map(magnifyTransform));
+            return scale.range().map(magnifyTransform);
         }
         ScaleDomainTransformers.magnify = magnify;
     })(ScaleDomainTransformers = Plottable.ScaleDomainTransformers || (Plottable.ScaleDomainTransformers = {}));
@@ -10341,6 +10341,35 @@ var Plottable;
         })(Interaction.AbstractInteraction);
         Interaction.Scroll = Scroll;
     })(Interaction = Plottable.Interaction || (Plottable.Interaction = {}));
+})(Plottable || (Plottable = {}));
+
+///<reference path="../reference.ts" />
+var Plottable;
+(function (Plottable) {
+    var Behavior;
+    (function (Behavior) {
+        var ScrollZoom = (function () {
+            function ScrollZoom(scale) {
+                this._scale = scale;
+                this._scrollInteraction = new Plottable.Interaction.Scroll();
+                this._setupInteraction(this._scrollInteraction);
+            }
+            ScrollZoom.prototype.getInteraction = function () {
+                return this._scrollInteraction;
+            };
+            ScrollZoom.prototype._setupInteraction = function (scrollInteraction) {
+                var _this = this;
+                var zoomScale = this._scale.copy();
+                var magnifyAmount = 1;
+                this._scrollInteraction.onScroll(function (point, deltaAmount) {
+                    magnifyAmount = Math.pow(2, -deltaAmount * .002) * magnifyAmount;
+                    _this._scale.domain(Plottable.ScaleDomainTransformers.magnify(zoomScale, magnifyAmount, point.x));
+                });
+            };
+            return ScrollZoom;
+        })();
+        Behavior.ScrollZoom = ScrollZoom;
+    })(Behavior = Plottable.Behavior || (Plottable.Behavior = {}));
 })(Plottable || (Plottable = {}));
 
 /*!

@@ -431,7 +431,7 @@ declare module Plottable {
          * @param {boolean} centerInDomainSpace Specifying if the domain is in domain space (default = false)
          * @returns {D[]} The magnified domain
          */
-        function magnify<D>(scale: Scale.AbstractQuantitative<D>, magnifyAmount: number, centerValue: number | D, centerInDomainSpace?: boolean): void;
+        function magnify<D>(scale: Scale.AbstractQuantitative<D>, magnifyAmount: number, centerValue: number | D, centerInDomainSpace?: boolean): D[];
     }
 }
 
@@ -4180,6 +4180,16 @@ declare module Plottable {
              * @return {Interaction.Scroll} The calling Interaction.Scroll.
              */
             onScroll(callback: (p: Point, deltaAmount: number) => any): Interaction.Scroll;
+        }
+    }
+}
+
+
+declare module Plottable {
+    module Behavior {
+        class ScrollZoom {
+            constructor(scale: Scale.AbstractQuantitative<number>);
+            getInteraction(): Interaction.Scroll;
         }
     }
 }
