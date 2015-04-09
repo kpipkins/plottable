@@ -13,8 +13,8 @@ module Plottable {
      * @returns {D[]} The translated domain
      */
     export function translate<D>(scale: Scale.AbstractQuantitative<D>, translateAmount: number) {
-      var translateTransform = (rangeValue: number) => scale.invert(rangeValue - translateAmount);
-      scale.domain(scale.range().map(translateTransform));
+      var translateTransform = (rangeValue: number) => scale.invert(rangeValue + translateAmount);
+      return scale.range().map(translateTransform);
     }
 
     /**
