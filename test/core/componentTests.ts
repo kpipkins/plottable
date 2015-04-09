@@ -12,6 +12,31 @@ function assertComponentXY(component: Plottable.Component.AbstractComponent, x: 
   assert.equal(yActual, y, "Y: " + message);
 }
 
+describe("Component", () => {
+
+  it("fixed-width component will align to the right spot", () => {
+    fixComponentSize(c, 100, 100);
+    c._anchor(svg);
+    c._computeLayout();
+    assertComponentXY(c, 0, 0, "top-left component aligns correctly");
+
+    c.xAlign("CENTER").yAlign("CENTER");
+    c._computeLayout();
+    assertComponentXY(c, 150, 100, "center component aligns correctly");
+
+    c.xAlign("RIGHT").yAlign("BOTTOM");
+    c._computeLayout();
+    assertComponentXY(c, 300, 200, "bottom-right component aligns correctly");
+    svg.remove();
+  });
+
+  it("xAlign()", () => {
+
+    assert.equal(c.xAlign(), "left", "x alignment defaults to \"left\"");
+    assert.equal(c.yAlign(), "top", "y alignment defaults to \"top\"");
+  });
+});
+
 describe("Component behavior", () => {
   var svg: D3.Selection;
   var c: Plottable.Component.AbstractComponent;
@@ -143,23 +168,7 @@ describe("Component behavior", () => {
     svg.remove();
   });
 
-  it("fixed-width component will align to the right spot", () => {
-    fixComponentSize(c, 100, 100);
-    c._anchor(svg);
-    c._computeLayout();
-    assertComponentXY(c, 0, 0, "top-left component aligns correctly");
-
-    c.xAlign("CENTER").yAlign("CENTER");
-    c._computeLayout();
-    assertComponentXY(c, 150, 100, "center component aligns correctly");
-
-    c.xAlign("RIGHT").yAlign("BOTTOM");
-    c._computeLayout();
-    assertComponentXY(c, 300, 200, "bottom-right component aligns correctly");
-    svg.remove();
-  });
-
-  it("components can be offset relative to their alignment, and throw errors if there is insufficient space", () => {
+  it("components can be offset relative to their alignment", () => {
     fixComponentSize(c, 100, 100);
     c._anchor(svg);
     c.xOffset(20).yOffset(20);
@@ -191,8 +200,6 @@ describe("Component behavior", () => {
     assert.equal(layout.height, 0, "requested height defaults to 0");
     assert.equal(layout.wantsWidth , false, "_requestedSpace().wantsWidth  defaults to false");
     assert.equal(layout.wantsHeight, false, "_requestedSpace().wantsHeight defaults to false");
-    assert.equal(c.xAlign(), "left", "x alignment defaults to \"left\"");
-    assert.equal(c.yAlign(), "top", "y alignment defaults to \"top\"");
     assert.equal((<any> c)._xOffset, 0, "xOffset defaults to 0");
     assert.equal((<any> c)._yOffset, 0, "yOffset defaults to 0");
     svg.remove();

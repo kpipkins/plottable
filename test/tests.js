@@ -5402,6 +5402,25 @@ function assertComponentXY(component, x, y, message) {
     assert.equal(xActual, x, "X: " + message);
     assert.equal(yActual, y, "Y: " + message);
 }
+describe("Component", function () {
+    it("fixed-width component will align to the right spot", function () {
+        fixComponentSize(c, 100, 100);
+        c._anchor(svg);
+        c._computeLayout();
+        assertComponentXY(c, 0, 0, "top-left component aligns correctly");
+        c.xAlign("CENTER").yAlign("CENTER");
+        c._computeLayout();
+        assertComponentXY(c, 150, 100, "center component aligns correctly");
+        c.xAlign("RIGHT").yAlign("BOTTOM");
+        c._computeLayout();
+        assertComponentXY(c, 300, 200, "bottom-right component aligns correctly");
+        svg.remove();
+    });
+    it("xAlign()", function () {
+        assert.equal(c.xAlign(), "left", "x alignment defaults to \"left\"");
+        assert.equal(c.yAlign(), "top", "y alignment defaults to \"top\"");
+    });
+});
 describe("Component behavior", function () {
     var svg;
     var c;
@@ -5512,20 +5531,7 @@ describe("Component behavior", function () {
         assert.isTrue(g3.classed("box-container"), "the fourth g is a box container");
         svg.remove();
     });
-    it("fixed-width component will align to the right spot", function () {
-        fixComponentSize(c, 100, 100);
-        c._anchor(svg);
-        c._computeLayout();
-        assertComponentXY(c, 0, 0, "top-left component aligns correctly");
-        c.xAlign("CENTER").yAlign("CENTER");
-        c._computeLayout();
-        assertComponentXY(c, 150, 100, "center component aligns correctly");
-        c.xAlign("RIGHT").yAlign("BOTTOM");
-        c._computeLayout();
-        assertComponentXY(c, 300, 200, "bottom-right component aligns correctly");
-        svg.remove();
-    });
-    it("components can be offset relative to their alignment, and throw errors if there is insufficient space", function () {
+    it("components can be offset relative to their alignment", function () {
         fixComponentSize(c, 100, 100);
         c._anchor(svg);
         c.xOffset(20).yOffset(20);
@@ -5551,8 +5557,6 @@ describe("Component behavior", function () {
         assert.equal(layout.height, 0, "requested height defaults to 0");
         assert.equal(layout.wantsWidth, false, "_requestedSpace().wantsWidth  defaults to false");
         assert.equal(layout.wantsHeight, false, "_requestedSpace().wantsHeight defaults to false");
-        assert.equal(c.xAlign(), "left", "x alignment defaults to \"left\"");
-        assert.equal(c.yAlign(), "top", "y alignment defaults to \"top\"");
         assert.equal(c._xOffset, 0, "xOffset defaults to 0");
         assert.equal(c._yOffset, 0, "yOffset defaults to 0");
         svg.remove();
