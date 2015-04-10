@@ -10356,11 +10356,13 @@ var Plottable;
             };
             ScrollZoom.prototype._setupInteraction = function (scrollInteraction) {
                 var _this = this;
-                var zoomScale = this._scale.copy();
                 var magnifyAmount = 1;
                 this._scrollInteraction.onScroll(function (point, deltaAmount) {
+                    var dataValue = _this._scale.invert(point.x);
+                    var oldMagnifyAmount = magnifyAmount;
                     magnifyAmount = Math.pow(2, -deltaAmount * .002) * magnifyAmount;
-                    _this._scale.domain(Plottable.ScaleDomainTransformers.magnify(zoomScale, magnifyAmount, point.x));
+                    _this._scale.domain(Plottable.ScaleDomainTransformers.magnify(_this._scale, magnifyAmount / oldMagnifyAmount));
+                    _this._scale.domain(Plottable.ScaleDomainTransformers.translate(_this._scale, _this._scale.scale(dataValue) - point.x));
                 });
             };
             return ScrollZoom;

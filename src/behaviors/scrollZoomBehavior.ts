@@ -17,11 +17,13 @@ export module Behavior {
     }
 
     private _setupInteraction(scrollInteraction: Interaction.Scroll) {
-      var zoomScale = this._scale.copy();
       var magnifyAmount = 1;
       this._scrollInteraction.onScroll((point: Point, deltaAmount: number) => {
+        var dataValue = this._scale.invert(point.x);
+        var oldMagnifyAmount = magnifyAmount;
         magnifyAmount = Math.pow(2, -deltaAmount * .002) * magnifyAmount;
-        this._scale.domain(ScaleDomainTransformers.magnify(zoomScale, magnifyAmount, point.x));
+        this._scale.domain(ScaleDomainTransformers.magnify(this._scale, magnifyAmount / oldMagnifyAmount));
+        this._scale.domain(ScaleDomainTransformers.translate(this._scale, this._scale.scale(dataValue) - point.x));
       });
     }
 
