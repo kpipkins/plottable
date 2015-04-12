@@ -2,11 +2,11 @@
 
 module Plottable {
 export module Behavior {
-  export class ScrollZoom {
+  export class ScrollZoom<D> {
     private _scrollInteraction: Interaction.Scroll;
-    private _scale: Scale.AbstractQuantitative<number>;
+    private _scale: Scale.AbstractQuantitative<D>;
 
-    constructor(scale: Scale.AbstractQuantitative<number>) {
+    constructor(scale: Scale.AbstractQuantitative<D>) {
       this._scale = scale;
       this._scrollInteraction = new Interaction.Scroll();
       this._setupInteraction(this._scrollInteraction);

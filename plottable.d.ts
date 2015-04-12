@@ -4190,8 +4190,8 @@ declare module Plottable {
 
 declare module Plottable {
     module Behavior {
-        class ScrollZoom {
-            constructor(scale: Scale.AbstractQuantitative<number>);
+        class ScrollZoom<D> {
+            constructor(scale: Scale.AbstractQuantitative<D>);
             getInteraction(): Interaction.Scroll;
         }
     }
