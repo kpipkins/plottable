@@ -10351,8 +10351,9 @@ var Plottable;
     var Behavior;
     (function (Behavior) {
         var ScrollZoom = (function () {
-            function ScrollZoom(scale) {
+            function ScrollZoom(scale, isVertical) {
                 this._scale = scale;
+                this._zoomVertical = isVertical;
                 this._scrollInteraction = new Plottable.Interaction.Scroll();
                 this._setupInteraction(this._scrollInteraction);
             }
@@ -10363,11 +10364,12 @@ var Plottable;
                 var _this = this;
                 var magnifyAmount = 1;
                 this._scrollInteraction.onScroll(function (point, deltaAmount) {
-                    var dataValue = _this._scale.invert(point.x);
+                    var pixelValue = _this._zoomVertical ? point.y : point.x;
+                    var dataValue = _this._scale.invert(pixelValue);
                     var oldMagnifyAmount = magnifyAmount;
                     magnifyAmount = Math.pow(2, -deltaAmount * .002) * magnifyAmount;
                     _this._scale.domain(Plottable.ScaleDomainTransformers.magnify(_this._scale, magnifyAmount / oldMagnifyAmount));
-                    _this._scale.domain(Plottable.ScaleDomainTransformers.translate(_this._scale, _this._scale.scale(dataValue) - point.x));
+                    _this._scale.domain(Plottable.ScaleDomainTransformers.translate(_this._scale, _this._scale.scale(dataValue) - pixelValue));
                 });
             };
             return ScrollZoom;
