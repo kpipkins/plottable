@@ -4193,6 +4193,10 @@ declare module Plottable {
         class ScrollZoom<D> {
             constructor(scale: Scale.AbstractQuantitative<D>, isVertical: boolean);
             getInteraction(): Interaction.Scroll;
+            zoomMin(): number;
+            zoomMin(zoomValue: number): Behavior.ScrollZoom<D>;
+            zoomMax(): number;
+            zoomMax(zoomValue: number): Behavior.ScrollZoom<D>;
         }
     }
 }

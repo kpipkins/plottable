@@ -10352,6 +10352,7 @@ var Plottable;
     (function (Behavior) {
         var ScrollZoom = (function () {
             function ScrollZoom(scale, isVertical) {
+                this._zoomExtent = [0, Infinity];
                 this._scale = scale;
                 this._zoomVertical = isVertical;
                 this._scrollInteraction = new Plottable.Interaction.Scroll();
@@ -10360,6 +10361,20 @@ var Plottable;
             ScrollZoom.prototype.getInteraction = function () {
                 return this._scrollInteraction;
             };
+            ScrollZoom.prototype.zoomMin = function (zoomValue) {
+                if (zoomValue == null) {
+                    return this._zoomExtent[0];
+                }
+                this._zoomExtent[0] = zoomValue;
+                return this;
+            };
+            ScrollZoom.prototype.zoomMax = function (zoomValue) {
+                if (zoomValue == null) {
+                    return this._zoomExtent[1];
+                }
+                this._zoomExtent[1] = zoomValue;
+                return this;
+            };
             ScrollZoom.prototype._setupInteraction = function (scrollInteraction) {
                 var _this = this;
                 var magnifyAmount = 1;
@@ -10367,7 +10382,7 @@ var Plottable;
                     var pixelValue = _this._zoomVertical ? point.y : point.x;
                     var dataValue = _this._scale.invert(pixelValue);
                     var oldMagnifyAmount = magnifyAmount;
-                    magnifyAmount = Math.pow(2, -deltaAmount * .002) * magnifyAmount;
+                    magnifyAmount = Math.max(_this._zoomExtent[0], Math.min(_this._zoomExtent[1], Math.pow(2, -deltaAmount * .002) * magnifyAmount));
                     _this._scale.domain(Plottable.ScaleDomainTransformers.magnify(_this._scale, magnifyAmount / oldMagnifyAmount));
                     _this._scale.domain(Plottable.ScaleDomainTransformers.translate(_this._scale, _this._scale.scale(dataValue) - pixelValue));
                 });
