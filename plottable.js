@@ -9405,8 +9405,8 @@ var Plottable;
              *
              * @param {any} key The key associated with the callback.
              *                  Key uniqueness is determined by deep equality.
-             * @param {TouchCallback} callback A callback that takes the pixel position
-             *                                     in svg-coordinate-space. Pass `null`
+             * @param {TouchCallback} callback A callback that takes a list of Touch identifiers
+             *                                     and a map from identifiers to pixel positions
              *                                     to remove a callback.
              * @return {Dispatcher.Touch} The calling Dispatcher.Touch.
              */
@@ -9420,7 +9420,8 @@ var Plottable;
              *
              * @param {any} key The key associated with the callback.
              *                  Key uniqueness is determined by deep equality.
-             * @param {TouchCallback} callback A callback that takes the pixel position
+             * @param {TouchCallback} callback A callback that takes a list of Touch identifiers
+             *                                     and a map from identifiers to pixel positions
              *                                     in svg-coordinate-space. Pass `null`
              *                                     to remove a callback.
              * @return {Dispatcher.Touch} The calling Dispatcher.Touch.
@@ -9435,8 +9436,8 @@ var Plottable;
              *
              * @param {any} key The key associated with the callback.
              *                  Key uniqueness is determined by deep equality.
-             * @param {TouchCallback} callback A callback that takes the pixel position
-             *                                     in svg-coordinate-space. Pass `null`
+             * @param {TouchCallback} callback A callback that takes a list of Touch identifiers
+             *                                     and a map from identifiers to pixel positions
              *                                     to remove a callback.
              * @return {Dispatcher.Touch} The calling Dispatcher.Touch.
              */
@@ -9450,7 +9451,8 @@ var Plottable;
              *
              * @param {any} key The key associated with the callback.
              *                  Key uniqueness is determined by deep equality.
-             * @param {TouchCallback} callback A callback that takes the pixel position
+             * @param {TouchCallback} callback A callback that takes a list of Touch identifiers
+             *                                     and a map from identifiers to pixel positions
              *                                     in svg-coordinate-space. Pass `null`
              *                                     to remove a callback.
              * @return {Dispatcher.Touch} The calling Dispatcher.Touch.
