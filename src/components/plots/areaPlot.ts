@@ -6,6 +6,7 @@ export module Plots {
    * An AreaPlot draws a filled region (area) between the plot's projected "y" and projected "y0" values.
    */
   export class Area<X> extends Line<X> {
+    private _y0Accessor: _Accessor;
     private _areaPath: D3.Selection;
     private _defaultFillColor: string;
 
@@ -70,6 +71,18 @@ export module Plots {
       if (attrToSet === "y0") {
         this._updateYDomainer();
       }
+      return this;
+    }
+    
+    public y0Accessor(): _Accessor;
+    public y0Accessor(y0Accessor: _Accessor): Plots.Area<X>;
+    public y0Accessor(y0Accessor?: _Accessor): any {
+      if (y0Accessor == null) {
+        return this._y0Accessor;
+      }
+      this._y0Accessor = y0Accessor;
+      this._updateYDomainer();
+      this._render();
       return this;
     }
 

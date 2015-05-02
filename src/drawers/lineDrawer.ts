@@ -6,6 +6,28 @@ export module Drawers {
     public static LINE_CLASS = "line";
 
     private _pathSelection: D3.Selection;
+    private _xAccessor: _Accessor;
+    private _yAccessor: _Accessor;
+    
+    public xAccessor(): _Accessor;
+    public xAccessor(xAccessor: _Accessor): Drawers.Line;
+    public xAccessor(xAccessor?: _Accessor): any {
+      if (xAccessor == null) {
+        return this._xAccessor;
+      }
+      this._xAccessor = xAccessor;
+      return this;
+    }
+    
+    public yAccessor(): _Accessor;
+    public yAccessor(yAccessor: _Accessor): Drawers.Line;
+    public yAccessor(yAccessor?: _Accessor): any {
+      if (yAccessor == null) {
+        return this._yAccessor;
+      }
+      this._yAccessor = yAccessor;
+      return this;
+    }
 
     protected _enterData(data: any[]) {
       super._enterData(data);

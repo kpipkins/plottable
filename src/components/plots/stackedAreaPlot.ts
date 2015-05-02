@@ -62,6 +62,24 @@ export module Plots {
       Stacked.prototype.project.apply(this, [attrToSet, accessor, scale]);
       return this;
     }
+    
+    public xAccessor(xAccessor?: _Accessor): any {
+      if (xAccessor == null) {
+        return super.xAccessor(xAccessor);
+      }
+      super.xAccessor(xAccessor);
+      Stacked.prototype.xAccessor.apply(this, [xAccessor]);
+      return this;
+    }
+    
+    public yAccessor(yAccessor?: _Accessor): any {
+      if (yAccessor == null) {
+        return super.yAccessor(yAccessor);
+      }
+      super.xAccessor(yAccessor);
+      Stacked.prototype.xAccessor.apply(this, [yAccessor]);
+      return this;
+    }
 
     protected _onDatasetUpdate() {
       super._onDatasetUpdate();

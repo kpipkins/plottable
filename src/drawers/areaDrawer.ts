@@ -7,6 +7,17 @@ export module Drawers {
 
     private _areaSelection: D3.Selection;
     private _drawLine = true;
+    private _y0Accessor: _Accessor;
+    
+    public y0Accessor(): _Accessor;
+    public y0Accessor(y0Accessor: _Accessor): Drawers.Area;
+    public y0Accessor(y0Accessor?: _Accessor): any {
+      if (y0Accessor == null) {
+        return this._y0Accessor;
+      }
+      this._y0Accessor = y0Accessor;
+      return this;
+    }
 
     protected _enterData(data: any[]) {
       if (this._drawLine) {

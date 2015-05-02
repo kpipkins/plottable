@@ -7223,17 +7223,29 @@ var Plottable;
             }
         };
         XYPlot.prototype.xAccessor = function (xAccessor) {
+            var _this = this;
             if (xAccessor == null) {
                 return this._xAccessor;
             }
             this._xAccessor = xAccessor;
+            if (this._xScale) {
+                this._xScale.broadcaster.registerListener("yDomainAdjustment" + this.getID(), function () { return _this._adjustYDomainOnChangeFromX(); });
+            }
+            this._updateXDomainer();
+            this._render();
             return this;
         };
         XYPlot.prototype.yAccessor = function (yAccessor) {
+            var _this = this;
             if (yAccessor == null) {
                 return this._yAccessor;
             }
-            this._xAccessor = yAccessor;
+            this._yAccessor = yAccessor;
+            if (this._yScale) {
+                this._yScale.broadcaster.registerListener("xDomainAdjustment" + this.getID(), function () { return _this._adjustXDomainOnChangeFromY(); });
+            }
+            this._updateYDomainer();
+            this._render();
             return this;
         };
         XYPlot.prototype._normalizeDatasets = function (fromX) {
@@ -7487,6 +7499,39 @@ var Plottable;
             };
             Grid.prototype._generateDrawSteps = function () {
                 return [{ attrToProjector: this._generateAttrToProjector(), animator: this._getAnimator("cells") }];
+            };
+            Grid.prototype.x1Accessor = function (x1Accessor) {
+                if (x1Accessor == null) {
+                    return this._x1Accessor;
+                }
+                this._x1Accessor = x1Accessor;
+                this._render();
+                return this;
+            };
+            Grid.prototype.x2Accessor = function (x2Accessor) {
+                if (x2Accessor == null) {
+                    return this._x2Accessor;
+                }
+                this._x1Accessor = x2Accessor;
+                this._render();
+                return this;
+            };
+            Grid.prototype.xAccessor = function (xAccessor) {
+                var _this = this;
+                if (this._xScale instanceof Plottable.Scales.Category) {
+                    var catScale = this._xScale;
+                    this.x1Accessor(function (d, i, u, m) {
+                        return catScale.scale(xAccessor(d, i, u, m)) - catScale.rangeBand() / 2;
+                    });
+                    this.x2Accessor(function (d, i, u, m) {
+                        return catScale.scale(xAccessor(d, i, u, m)) + catScale.rangeBand() / 2;
+                    });
+                }
+                if (this._xScale instanceof Plottable.QuantitativeScale) {
+                    this.x1Accessor(function (d, i, u, m) {
+                        return _this._xScale.scale(xAccessor(d, i, u, m));
+                    });
+                }
             };
             return Grid;
         })(Plots.Rectangle);
@@ -8114,6 +8159,15 @@ var Plottable;
                 }
                 return this;
             };
+            Area.prototype.y0Accessor = function (y0Accessor) {
+                if (y0Accessor == null) {
+                    return this._y0Accessor;
+                }
+                this._y0Accessor = y0Accessor;
+                this._updateYDomainer();
+                this._render();
+                return this;
+            };
             Area.prototype._getResetYFunction = function () {
                 return this._generateAttrToProjector()["y0"];
             };
@@ -8242,6 +8296,26 @@ var Plottable;
         Stacked.prototype.project = function (attrToSet, accessor, scale) {
             _super.prototype.project.call(this, attrToSet, accessor, scale);
             if (this._projections["x"] && this._projections["y"] && (attrToSet === "x" || attrToSet === "y")) {
+                this._updateStackOffsets();
+            }
+            return this;
+        };
+        Stacked.prototype.xAccessor = function (xAccessor) {
+            if (xAccessor == null) {
+                return _super.prototype.xAccessor.call(this, xAccessor);
+            }
+            _super.prototype.xAccessor.call(this, xAccessor);
+            if (this.xAccessor() !== null && this.yAccessor() !== null) {
+                this._updateStackOffsets();
+            }
+            return this;
+        };
+        Stacked.prototype.yAccessor = function (yAccessor) {
+            if (yAccessor == null) {
+                return _super.prototype.yAccessor.call(this, yAccessor);
+            }
+            _super.prototype.yAccessor.call(this, yAccessor);
+            if (this.yAccessor() !== null && this.yAccessor() !== null) {
                 this._updateStackOffsets();
             }
             return this;

@@ -31,6 +31,28 @@ module Plottable {
       }
       return this;
     }
+    
+    public xAccessor(xAccessor?: _Accessor): any {
+      if (xAccessor == null) {
+        return super.xAccessor(xAccessor);
+      }
+      super.xAccessor(xAccessor);
+      if (this.xAccessor() !== null && this.yAccessor() !== null) {
+        this._updateStackOffsets();
+      }
+      return this;
+    }
+    
+    public yAccessor(yAccessor?: _Accessor): any {
+      if (yAccessor == null) {
+        return super.yAccessor(yAccessor);
+      }
+      super.yAccessor(yAccessor);
+      if (this.yAccessor() !== null && this.yAccessor() !== null) {
+        this._updateStackOffsets();
+      }
+      return this;
+    }
 
     public _onDatasetUpdate() {
       if (this._projectorsReady()) {

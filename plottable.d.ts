@@ -2977,6 +2977,11 @@ declare module Plottable {
              */
             project(attrToSet: string, accessor: any, scale?: Scale<any, any>): Grid;
             protected _generateDrawSteps(): Drawers.DrawStep[];
+            x1Accessor(): _Accessor;
+            x1Accessor(x1Accessor: _Accessor): Plots.Grid;
+            x2Accessor(): _Accessor;
+            x2Accessor(x2Accessor: _Accessor): Plots.Grid;
+            xAccessor(xAccessor?: _Accessor): any;
         }
     }
 }
@@ -3156,6 +3161,8 @@ declare module Plottable {
             protected _getDrawer(key: string): Drawers.Area;
             protected _updateYDomainer(): void;
             project(attrToSet: string, accessor: any, scale?: Scale<any, any>): Area<X>;
+            y0Accessor(): _Accessor;
+            y0Accessor(y0Accessor: _Accessor): Plots.Area<X>;
             protected _getResetYFunction(): (datum: any, index: number, userMetadata: any, plotMetadata: PlotMetadata) => any;
             protected _wholeDatumAttributes(): string[];
             protected _generateAttrToProjector(): {
@@ -3210,6 +3217,8 @@ declare module Plottable {
         protected _isVertical: boolean;
         _getPlotMetadataForDataset(key: string): Plots.StackedPlotMetadata;
         project(attrToSet: string, accessor: any, scale?: Scale<any, any>): Stacked<X, Y>;
+        xAccessor(xAccessor?: _Accessor): any;
+        yAccessor(yAccessor?: _Accessor): any;
         _onDatasetUpdate(): void;
         _updateStackOffsets(): void;
         _updateStackExtents(): void;

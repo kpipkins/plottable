@@ -4,6 +4,8 @@ module Plottable {
 export module Plots {
   export class Grid extends Rectangle<any, any> {
     private _colorScale: Scale<any, string>;
+    private _x1Accessor: _Accessor;
+    private _x2Accessor: _Accessor;
 
     /**
      * Constructs a GridPlot.
@@ -95,6 +97,45 @@ export module Plots {
 
     protected _generateDrawSteps(): Drawers.DrawStep[] {
       return [{attrToProjector: this._generateAttrToProjector(), animator: this._getAnimator("cells")}];
+    }
+    
+    public x1Accessor(): _Accessor;
+    public x1Accessor(x1Accessor: _Accessor): Plots.Grid;
+    public x1Accessor(x1Accessor?: _Accessor): any {
+      if (x1Accessor == null) {
+        return this._x1Accessor;
+      }
+      this._x1Accessor = x1Accessor;
+      this._render();
+      return this;
+    }
+    
+    public x2Accessor(): _Accessor;
+    public x2Accessor(x2Accessor: _Accessor): Plots.Grid;
+    public x2Accessor(x2Accessor?: _Accessor): any {
+      if (x2Accessor == null) {
+        return this._x2Accessor;
+      }
+      this._x1Accessor = x2Accessor;
+      this._render();
+      return this;
+    }
+    
+    public xAccessor(xAccessor?: _Accessor): any {
+      if (this._xScale instanceof Scales.Category) {
+        var catScale = <Scales.Category> this._xScale;
+        this.x1Accessor((d: any, i: number, u: any, m: Plots.PlotMetadata) => {
+          return catScale.scale(xAccessor(d, i, u, m)) - catScale.rangeBand() / 2;
+        });
+        this.x2Accessor((d: any, i: number, u: any, m: Plots.PlotMetadata) => {
+          return catScale.scale(xAccessor(d, i, u, m)) + catScale.rangeBand() / 2;
+        });
+      }
+      if (this._xScale instanceof QuantitativeScale) {
+        this.x1Accessor((d: any, i: number, u: any, m: Plots.PlotMetadata) => {
+          return this._xScale.scale(xAccessor(d, i, u, m));
+        });
+      }
     }
   }
 }

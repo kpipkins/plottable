@@ -202,6 +202,10 @@ module Plottable {
         return this._xAccessor;
       }
       this._xAccessor = xAccessor;
+      if (this._xScale) {
+        this._xScale.broadcaster.registerListener("yDomainAdjustment" + this.getID(), () => this._adjustYDomainOnChangeFromX());
+      }
+      this._updateXDomainer();
       this._render();
       return this;
     }
@@ -213,6 +217,10 @@ module Plottable {
         return this._yAccessor;
       }
       this._yAccessor = yAccessor;
+      if (this._yScale) {
+        this._yScale.broadcaster.registerListener("xDomainAdjustment" + this.getID(), () => this._adjustXDomainOnChangeFromY());
+      }
+      this._updateYDomainer();
       this._render();
       return this;
     }

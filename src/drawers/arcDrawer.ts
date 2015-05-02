@@ -3,10 +3,22 @@
 module Plottable {
 export module Drawers {
   export class Arc extends Element {
+    
+    private _valueAccessor: _Accessor;
 
     constructor(key: string) {
       super(key);
       this._svgElement = "path";
+    }
+    
+    public valueAccessor(): _Accessor;
+    public valueAccessor(valueAccessor: _Accessor): Drawers.Arc;
+    public valueAccessor(valueAccessor?: _Accessor): any {
+      if (valueAccessor == null) {
+        return this._valueAccessor;
+      }
+      this._valueAccessor = valueAccessor;
+      return this;
     }
 
     private _createArc(innerRadiusF: AppliedProjector, outerRadiusF: AppliedProjector) {
