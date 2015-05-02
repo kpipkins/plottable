@@ -7222,6 +7222,20 @@ var Plottable;
                 toScaleQ.domain(adjustedDomain);
             }
         };
+        XYPlot.prototype.xAccessor = function (xAccessor) {
+            if (xAccessor == null) {
+                return this._xAccessor;
+            }
+            this._xAccessor = xAccessor;
+            return this;
+        };
+        XYPlot.prototype.yAccessor = function (yAccessor) {
+            if (yAccessor == null) {
+                return this._yAccessor;
+            }
+            this._xAccessor = yAccessor;
+            return this;
+        };
         XYPlot.prototype._normalizeDatasets = function (fromX) {
             var _this = this;
             var aAccessor = this._projections[fromX ? "x" : "y"].accessor;

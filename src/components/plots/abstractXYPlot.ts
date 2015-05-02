@@ -6,6 +6,8 @@ module Plottable {
     protected _yScale: Scale<Y, number>;
     private _autoAdjustXScaleDomain = false;
     private _autoAdjustYScaleDomain = false;
+    private _xAccessor: _Accessor;
+    private _yAccessor: _Accessor;
 
     /**
      * Constructs an XYPlot.
@@ -191,6 +193,28 @@ module Plottable {
         adjustedDomain = toScaleQ.domainer().computeDomain([adjustedDomain], toScaleQ);
         toScaleQ.domain(adjustedDomain);
       }
+    }
+    
+    public xAccessor(): _Accessor;
+    public xAccessor(xAccessor: _Accessor): XYPlot<X, Y>;
+    public xAccessor(xAccessor?: _Accessor): any {
+      if (xAccessor == null) {
+        return this._xAccessor;
+      }
+      this._xAccessor = xAccessor;
+      this._render();
+      return this;
+    }
+    
+    public yAccessor(): _Accessor;
+    public yAccessor(yAccessor: _Accessor): XYPlot<X, Y>;
+    public yAccessor(yAccessor?: _Accessor): any {
+      if (yAccessor == null) {
+        return this._yAccessor;
+      }
+      this._yAccessor = yAccessor;
+      this._render();
+      return this;
     }
 
     protected _normalizeDatasets<A, B>(fromX: boolean): {a: A; b: B}[] {

@@ -2889,6 +2889,10 @@ declare module Plottable {
          * This call does not override auto domain adjustment behavior over visible points.
          */
         showAllData(): void;
+        xAccessor(): _Accessor;
+        xAccessor(xAccessor: _Accessor): XYPlot<X, Y>;
+        yAccessor(): _Accessor;
+        yAccessor(yAccessor: _Accessor): XYPlot<X, Y>;
         protected _normalizeDatasets<A, B>(fromX: boolean): {
             a: A;
             b: B;
